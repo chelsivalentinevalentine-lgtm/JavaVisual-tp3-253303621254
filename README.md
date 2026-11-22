@@ -47,4 +47,4 @@ Screenshot berikut menunjukkan hasil eksekusi program, termasuk pengujian valida
 - Mata Kuliah: Java Visual (SIH-6406)
 
 ## Link Laporan Google Docs
-[Masukkan link Google Docs laporan TP3 di sini]
+https://docs.google.com/document/d/1GbjOBjqaqCjnWuIgEAI1WUFzneOqaH9qc4DoRaXp3_E/edit?usp=sharing
