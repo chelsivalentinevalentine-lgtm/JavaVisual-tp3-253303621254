@@ -104,4 +104,16 @@ public class Character {
                 ", mana=" + mana +
                 '}';
     }
+
+    // Membandingkan Character berdasarkan nama
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+
+        if (!(obj instanceof Character)) return false;
+
+        Character other = (Character) obj;
+
+        return this.name.equals(other.name);
+    }
 }
