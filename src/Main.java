@@ -9,10 +9,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // 1. Membuat CharacterManager
+        // Membuat CharacterManager
         CharacterManager manager = new CharacterManager();
 
-        // 2. Menambahkan 5 karakter
+        // Menambahkan 6 karakter
         manager.addCharacter(
                 new Character("Arjuna", CharacterType.WARRIOR, 5)
         );
@@ -33,15 +33,15 @@ public class Main {
                 new Character("Luna", CharacterType.HEALER, 6)
         );
 
-        // 3. Mengambil rata-rata level dari Model
-        double averageLevel = manager.getAverageLevel();
+        manager.addCharacter(
+                new Character("Kadita", CharacterType.MAGE, 8)
+        );
 
-        // 4. Menjalankan GUI melalui Event Dispatch Thread
+        // Menjalankan GUI melalui Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
 
             MainWindow window = new MainWindow(
-                    manager.getAllCharacters(),
-                    averageLevel
+                    manager.getAllCharacters()
             );
 
             window.setVisible(true);
