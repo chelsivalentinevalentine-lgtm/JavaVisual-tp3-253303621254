@@ -1,94 +1,83 @@
-# Character Manager — Sprint 3 (TP8)
-
-## MainWindow, Data Dinamis & Analisis MVC
+# Character Manager — TP10
+## Sprint #4: Theming & Swing Component Properties
 
 **Mata Kuliah:** Java Visual (SIH-6406)  
-**CPMK:** 2  
-**SCPMK:** 3
+**Nama:** Chelsi Valentine Harefa  
+**NIM:** 253303621254  
+**Kelas:** 2 Pagi B  
+**Versi Aplikasi:** Character Manager v0.4
 
-## Deskripsi
+---
 
-Pada Sprint 3 (TP8), aplikasi Character Manager dikembangkan dengan menambahkan antarmuka grafis (GUI) menggunakan Java Swing. Aplikasi menampilkan daftar karakter secara dinamis melalui JFrame dan JLabel serta menampilkan informasi rata-rata level karakter.
+## A. Deskripsi Proyek
 
-## Fitur Utama
+TP10 merupakan pengembangan aplikasi Character Manager menggunakan Java Swing. Pada sprint ini, aplikasi dikembangkan dengan menerapkan pengaturan tampilan menggunakan `AppTheme`, seperti warna, font, dan border. Tampilan karakter dibuat lebih menarik dengan warna berbeda berdasarkan jenis karakter (role).
 
-- Membuat GUI menggunakan Java Swing.
-- Mengimplementasikan MainWindow yang mewarisi JFrame.
-- Menampilkan daftar karakter secara dinamis menggunakan perulangan.
-- Menampilkan nama, tipe, level, HP, dan attack power karakter.
-- Menampilkan jumlah karakter.
-- Menghitung dan menampilkan rata-rata level karakter.
-- Menjalankan GUI menggunakan SwingUtilities.invokeLater().
-- Mengatur tampilan karakter secara vertikal menggunakan BoxLayout.
+## B. Implementasi AppTheme
 
-## Data Karakter
+File `AppTheme.java` dibuat di package `com.unpri.charactermanager.view`.
 
-Aplikasi menggunakan lima karakter:
+Pengaturan tampilan dipusatkan di dalam kelas `AppTheme`, meliputi:
 
-| Nama | Tipe | Level |
-|---|---|---:|
-| Arjuna | WARRIOR | 5 |
-| Merlin | MAGE | 3 |
-| Athena | ARCHER | 4 |
-| Bima | WARRIOR | 7 |
-| Luna | HEALER | 10 |
+- Warna latar utama dan warna teks.
+- Warna khusus untuk Warrior, Mage, Archer, dan Healer.
+- Font judul, isi, dan monospace.
+- Border untuk kartu karakter.
+- Pemetaan warna menggunakan `colorFor(CharacterType)`.
+- Deskripsi role menggunakan `describe(CharacterType)`.
 
-Karakter Bima ditambahkan sebagai karakter bertipe WARRIOR dengan level 7 karena memiliki kemampuan bertarung yang kuat. Karakter Luna ditambahkan sebagai HEALER dengan level 10 untuk melengkapi variasi peran karakter dalam aplikasi.
+Warna disimpan di `AppTheme`, bukan di `Character`, karena warna merupakan bagian dari tampilan aplikasi, bukan data inti karakter. Dengan pemisahan ini, model tetap independen dari Swing dan AWT sehingga dapat digunakan kembali pada tampilan lain. Pengaturan tema juga lebih mudah diperbarui tanpa mengubah logika model. Hal ini membantu menjaga prinsip pemisahan tanggung jawab dalam pola MVC.
 
-## Hasil Pengujian
+## C. Screenshot Aplikasi
 
-### 1. Sebelum Perubahan Data
+### Sebelum TP10 — Character Manager v0.3
 
-Luna memiliki level 6. Rata-rata level dari lima karakter adalah 5.0.
+![Screenshot sebelum TP10](screenshots/tp10-sebelum-v03.png)
 
-![Hasil TP8 Sebelum Perubahan](screenshots/tp8-sebelum.png)
+### Sesudah TP10 — Character Manager v0.4
 
-### 2. Sesudah Perubahan Data
+![Screenshot sesudah TP10](screenshots/tp10-sesudah-v04.png)
 
-Level Luna diubah dari 6 menjadi 10. Setelah program dijalankan kembali, rata-rata level berubah menjadi 5.8.
+## D. Properti Tambahan
 
-![Hasil TP8 Sesudah Perubahan](screenshots/tp8-sesudah.png)
+Dua properti tambahan yang diterapkan pada komponen JLabel:
 
-Pengujian ini membuktikan bahwa perubahan data karakter memengaruhi hasil perhitungan rata-rata level yang ditampilkan pada GUI.
+1. **ToolTipText (`setToolTipText`)**  
+   Menampilkan informasi tambahan berupa deskripsi role, HP, dan ATK ketika pengguna mengarahkan kursor ke kartu karakter. Properti ini membantu pengguna memperoleh informasi lebih lengkap tanpa membuat tampilan utama terlalu ramai.
 
-## Analisis MVC
+2. **Horizontal Alignment (`setHorizontalAlignment`)**  
+   Mengatur perataan teks karakter ke sisi kiri agar informasi setiap karakter lebih mudah dibaca dan tampil konsisten.
 
-Alur program dimulai dari Main.java yang membuat objek CharacterManager dan menambahkan data karakter. Selanjutnya, CharacterManager mengelola kumpulan data karakter serta menghitung rata-rata level. Data tersebut kemudian dikirimkan ke MainWindow untuk ditampilkan menggunakan komponen Java Swing.
+Selain itu, aplikasi juga menerapkan cursor `HAND_CURSOR` dan penekanan visual untuk karakter dengan level minimal 5 menggunakan warna emas dan font tebal.
 
-Penerapan ini sesuai dengan konsep MVC (Model-View-Controller), yaitu Model bertanggung jawab mengelola data dan logika, sedangkan View bertanggung jawab menampilkan informasi kepada pengguna. Main.java berperan sebagai pengatur jalannya aplikasi dan menghubungkan Model dengan View.
+## E. Mini Challenge
 
-## Event Dispatch Thread (EDT)
+Karakter dengan level minimal 5 akan ditampilkan menggunakan teks berwarna emas dan font tebal. Batas level ditentukan melalui konstanta `HIGH_LEVEL_THRESHOLD` di `AppTheme`, sehingga nilai batas dapat diubah dari satu tempat.
 
-Aplikasi menggunakan SwingUtilities.invokeLater() untuk menjalankan pembuatan dan penampilan GUI melalui Event Dispatch Thread (EDT). Penggunaan EDT membantu menjaga agar antarmuka Swing berjalan dengan aman dan responsif.
+## F. Analisis Properti & MVC
 
-## Struktur Folder
+Laporan analisis lengkap minimal 500 kata tersedia melalui Google Docs:
+
+**Link Google Docs:** 
+  https://docs.google.com/document/d/1yy_5cEwf07As2V81NW2msPiOi7dqrEgTQLt_NBXsT8w/edit?usp=sharing
+
+## G. Struktur File Utama
 
 ```text
-CharacterManagerrr/
-├── src/
-│   ├── Main.java
-│   └── com/
-│       └── unpri/
-│           └── charactermanager/
-│               ├── model/
-│               │   ├── Character.java
-│               │   ├── CharacterType.java
-│               │   └── CharacterManager.java
-│               └── view/
-│                   └── MainWindow.java
-├── screenshots/
-│   ├── hasil-tp5.png
-│   ├── tp8-sebelum.png
-│   └── tp8-sesudah.png
-└── README.md
+src/
+├── Main.java
+└── com/
+    └── unpri/
+        └── charactermanager/
+            ├── model/
+            │   ├── Character.java
+            │   ├── CharacterManager.java
+            │   └── CharacterType.java
+            └── view/
+                ├── AppTheme.java
+                └── MainWindow.java
 ```
 
-## Identitas Mahasiswa
+## H. Kesimpulan
 
-- **Nama:** Chelsi Valentine Harefa
-- **NIM:** 253303621254
-- **Kelas:** 2 Pagi B
-- **Mata Kuliah:** Java Visual (SIH-6406)
-
-## Link Laporan Google Docs TP8
-https://docs.google.com/document/d/1kIS5dgznQwIm7O-5p7fOIhc0tNEwpKesG9T6N37T1bE/edit?usp=sharing
+Pada TP10, aplikasi Character Manager berhasil dikembangkan menjadi versi 0.4 dengan penerapan tema terpusat, warna berdasarkan role, pengaturan font, border, tooltip, dan properti alignment. Pengembangan ini mempertahankan pemisahan antara Model dan View sehingga struktur aplikasi menjadi lebih terorganisasi dan mudah dikembangkan.
