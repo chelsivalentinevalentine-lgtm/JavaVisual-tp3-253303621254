@@ -1,65 +1,65 @@
+# Character Manager — Sprint 3 (TP8)
 
-# Character Manager — Sprint 2 (TP5)
-
-## CharacterManager, Analytics & Object Reference
+## MainWindow, Data Dinamis & Analisis MVC
 
 **Mata Kuliah:** Java Visual (SIH-6406)  
-**CPMK:** 1  
-**SCPMK:** 2
+**CPMK:** 2  
+**SCPMK:** 3
 
 ## Deskripsi
 
-Pada Sprint 2 (TP5), aplikasi Character Manager dikembangkan dengan menerapkan pengelolaan kumpulan objek menggunakan ArrayList, method equals(), pencarian, penghapusan, serta analisis data karakter.
+Pada Sprint 3 (TP8), aplikasi Character Manager dikembangkan dengan menambahkan antarmuka grafis (GUI) menggunakan Java Swing. Aplikasi menampilkan daftar karakter secara dinamis melalui JFrame dan JLabel serta menampilkan informasi rata-rata level karakter.
 
 ## Fitur Utama
 
-- Implementasi equals() untuk membandingkan karakter berdasarkan nama.
-- Menambahkan karakter menggunakan addCharacter().
-- Menolak karakter dengan nama duplikat.
-- Mencari karakter menggunakan findByName().
-- Menghapus karakter menggunakan removeCharacter().
-- Menghitung jumlah karakter menggunakan getTotalCharacters().
-- Mengambil daftar karakter menggunakan getAllCharacters().
-- Menerapkan defensive copy.
-- Menghitung rata-rata level menggunakan getAverageLevel().
-- Mencari karakter berdasarkan tipe menggunakan findByType().
+- Membuat GUI menggunakan Java Swing.
+- Mengimplementasikan MainWindow yang mewarisi JFrame.
+- Menampilkan daftar karakter secara dinamis menggunakan perulangan.
+- Menampilkan nama, tipe, level, HP, dan attack power karakter.
+- Menampilkan jumlah karakter.
+- Menghitung dan menampilkan rata-rata level karakter.
+- Menjalankan GUI menggunakan SwingUtilities.invokeLater().
+- Mengatur tampilan karakter secara vertikal menggunakan BoxLayout.
 
-## Mini Challenge
+## Data Karakter
 
-### 1. getAverageLevel()
+Aplikasi menggunakan lima karakter:
 
-Menghitung rata-rata level seluruh karakter. Jika daftar karakter kosong, method mengembalikan nilai 0.
+| Nama | Tipe | Level |
+|---|---|---:|
+| Arjuna | WARRIOR | 5 |
+| Merlin | MAGE | 3 |
+| Athena | ARCHER | 4 |
+| Bima | WARRIOR | 7 |
+| Luna | HEALER | 10 |
 
-### 2. findByType()
-
-Mencari dan mengembalikan daftar karakter berdasarkan tipe CharacterType tertentu.
-
-## Fitur Analisis Tambahan
-
-### findStrongest()
-
-Method findStrongest() digunakan untuk mencari karakter dengan level tertinggi di dalam CharacterManager.
-
-Jika daftar karakter kosong, method mengembalikan null.
-
-Fitur ini dibuat untuk memudahkan pengguna mengetahui karakter dengan level tertinggi secara otomatis.
+Karakter Bima ditambahkan sebagai karakter bertipe WARRIOR dengan level 7 karena memiliki kemampuan bertarung yang kuat. Karakter Luna ditambahkan sebagai HEALER dengan level 10 untuk melengkapi variasi peran karakter dalam aplikasi.
 
 ## Hasil Pengujian
 
-1. Tiga karakter berhasil ditambahkan.
-2. Karakter duplikat berhasil ditolak.
-3. Karakter Merlin berhasil ditemukan.
-4. Karakter Athena berhasil dihapus.
-5. Rata-rata level menghasilkan 4.0.
-6. Karakter bertipe WARRIOR berhasil ditemukan.
-7. Arjuna berhasil ditemukan sebagai karakter dengan level tertinggi.
-8. Object reference menunjukkan kedua referensi mengarah ke objek yang sama.
-9. Defensive copy membuktikan perubahan pada salinan tidak mengubah daftar asli.
-10. Rata-rata level pada daftar kosong menghasilkan 0.0.
+### 1. Sebelum Perubahan Data
 
-## Screenshot Output Program
+Luna memiliki level 6. Rata-rata level dari lima karakter adalah 5.0.
 
-![Hasil Program TP5](screenshots/hasil-tp5.png)
+![Hasil TP8 Sebelum Perubahan](screenshots/tp8-sebelum.png)
+
+### 2. Sesudah Perubahan Data
+
+Level Luna diubah dari 6 menjadi 10. Setelah program dijalankan kembali, rata-rata level berubah menjadi 5.8.
+
+![Hasil TP8 Sesudah Perubahan](screenshots/tp8-sesudah.png)
+
+Pengujian ini membuktikan bahwa perubahan data karakter memengaruhi hasil perhitungan rata-rata level yang ditampilkan pada GUI.
+
+## Analisis MVC
+
+Alur program dimulai dari Main.java yang membuat objek CharacterManager dan menambahkan data karakter. Selanjutnya, CharacterManager mengelola kumpulan data karakter serta menghitung rata-rata level. Data tersebut kemudian dikirimkan ke MainWindow untuk ditampilkan menggunakan komponen Java Swing.
+
+Penerapan ini sesuai dengan konsep MVC (Model-View-Controller), yaitu Model bertanggung jawab mengelola data dan logika, sedangkan View bertanggung jawab menampilkan informasi kepada pengguna. Main.java berperan sebagai pengatur jalannya aplikasi dan menghubungkan Model dengan View.
+
+## Event Dispatch Thread (EDT)
+
+Aplikasi menggunakan SwingUtilities.invokeLater() untuk menjalankan pembuatan dan penampilan GUI melalui Event Dispatch Thread (EDT). Penggunaan EDT membantu menjaga agar antarmuka Swing berjalan dengan aman dan responsif.
 
 ## Struktur Folder
 
@@ -70,22 +70,25 @@ CharacterManagerrr/
 │   └── com/
 │       └── unpri/
 │           └── charactermanager/
-│               └── model/
-│                   ├── Character.java
-│                   ├── CharacterType.java
-│                   └── CharacterManager.java
+│               ├── model/
+│               │   ├── Character.java
+│               │   ├── CharacterType.java
+│               │   └── CharacterManager.java
+│               └── view/
+│                   └── MainWindow.java
 ├── screenshots/
-│   └── hasil-tp5.png
+│   ├── hasil-tp5.png
+│   ├── tp8-sebelum.png
+│   └── tp8-sesudah.png
 └── README.md
 ```
 
 ## Identitas Mahasiswa
 
-- Nama: Chelsi Valentine Harefa
-- NIM: 253303621254
-- Kelas: 2 Pagi B
-- Mata Kuliah: Java Visual (SIH-6406)
+- **Nama:** Chelsi Valentine Harefa
+- **NIM:** 253303621254
+- **Kelas:** 2 Pagi B
+- **Mata Kuliah:** Java Visual (SIH-6406)
 
-## Link Laporan Google Docs
-
-https://docs.google.com/document/d/1Qa3dCUf4u4hepcE3vYz8KQwR3NZRN3iRZ17y6c4-nPk/edit?usp=sharing
+## Link Laporan Google Docs TP8
+https://docs.google.com/document/d/1kIS5dgznQwIm7O-5p7fOIhc0tNEwpKesG9T6N37T1bE/edit?usp=sharing
