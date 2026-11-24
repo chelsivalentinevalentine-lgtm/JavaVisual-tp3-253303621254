@@ -12,7 +12,7 @@ public class Main {
         // Membuat CharacterManager
         CharacterManager manager = new CharacterManager();
 
-        // Menambahkan 6 karakter
+        // Menambahkan 8 karakter
         manager.addCharacter(
                 new Character("Arjuna", CharacterType.WARRIOR, 5)
         );
@@ -35,6 +35,14 @@ public class Main {
 
         manager.addCharacter(
                 new Character("Kadita", CharacterType.MAGE, 8)
+        );
+
+        manager.addCharacter(
+                new Character("Gatotkaca", CharacterType.WARRIOR, 9)
+        );
+
+        manager.addCharacter(
+                new Character("Morgana", CharacterType.MAGE, 2)
         );
 
         // Menjalankan GUI melalui Event Dispatch Thread
