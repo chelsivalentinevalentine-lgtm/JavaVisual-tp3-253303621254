@@ -1,83 +1,112 @@
-# Character Manager — TP10
-## Sprint #4: Theming & Swing Component Properties
+# Character Manager — TP12
+## Sprint #5: Layout, UI Responsif & Analisis MVC
 
 **Mata Kuliah:** Java Visual (SIH-6406)  
 **Nama:** Chelsi Valentine Harefa  
 **NIM:** 253303621254  
 **Kelas:** 2 Pagi B  
-**Versi Aplikasi:** Character Manager v0.4
+**Versi Aplikasi:** Character Manager v0.5
 
 ---
 
 ## A. Deskripsi Proyek
 
-TP10 merupakan pengembangan aplikasi Character Manager menggunakan Java Swing. Pada sprint ini, aplikasi dikembangkan dengan menerapkan pengaturan tampilan menggunakan `AppTheme`, seperti warna, font, dan border. Tampilan karakter dibuat lebih menarik dengan warna berbeda berdasarkan jenis karakter (role).
+TP12 merupakan pengembangan aplikasi Character Manager dari versi v0.4 menjadi v0.5. Pada sprint ini, aplikasi dikembangkan dengan menerapkan berbagai LayoutManager pada Java Swing agar tampilan lebih terstruktur, fleksibel, dan responsif terhadap perubahan ukuran jendela.
 
-## B. Implementasi AppTheme
+## B. Implementasi LayoutManager
 
-File `AppTheme.java` dibuat di package `com.unpri.charactermanager.view`.
+Aplikasi menggunakan beberapa LayoutManager:
 
-Pengaturan tampilan dipusatkan di dalam kelas `AppTheme`, meliputi:
+1. **BorderLayout** — membagi tampilan utama menjadi NORTH, CENTER, EAST, dan SOUTH.
+2. **GridLayout** — menyusun panel statistik role dalam satu baris dengan empat kolom.
+3. **BoxLayout** — menyusun Role Legend secara vertikal.
+4. **BorderLayout pada wrapper panel** — menjaga kartu karakter tetap tersusun dari bagian atas.
+5. **JScrollPane** — memungkinkan pengguna menggulir daftar karakter ketika ruang tampilan terbatas.
 
-- Warna latar utama dan warna teks.
-- Warna khusus untuk Warrior, Mage, Archer, dan Healer.
-- Font judul, isi, dan monospace.
-- Border untuk kartu karakter.
-- Pemetaan warna menggunakan `colorFor(CharacterType)`.
-- Deskripsi role menggunakan `describe(CharacterType)`.
+## C. Struktur Antarmuka
 
-Warna disimpan di `AppTheme`, bukan di `Character`, karena warna merupakan bagian dari tampilan aplikasi, bukan data inti karakter. Dengan pemisahan ini, model tetap independen dari Swing dan AWT sehingga dapat digunakan kembali pada tampilan lain. Pengaturan tema juga lebih mudah diperbarui tanpa mengubah logika model. Hal ini membantu menjaga prinsip pemisahan tanggung jawab dalam pola MVC.
+Pembagian area aplikasi Character Manager v0.5:
 
-## C. Screenshot Aplikasi
+| Area | Komponen |
+|---|---|
+| NORTH | Header dan panel statistik karakter |
+| CENTER | Daftar kartu karakter dalam JScrollPane |
+| EAST | Role Legend |
+| SOUTH | Status bar dan versi aplikasi |
 
-### Sebelum TP10 — Character Manager v0.3
+Panel statistik tambahan menggunakan `GridLayout(1, 4, 8, 0)` untuk menampilkan jumlah karakter berdasarkan role WARRIOR, MAGE, ARCHER, dan HEALER.
 
-![Screenshot sebelum TP10](screenshots/tp10-sebelum-v03.png)
+## D. Nested Panels
 
-### Sesudah TP10 — Character Manager v0.4
+Nested panels digunakan untuk membagi antarmuka menjadi beberapa bagian. Header dan panel statistik ditempatkan di dalam panel pembungkus. Daftar kartu karakter juga ditempatkan dalam wrapper panel sebelum dimasukkan ke JScrollPane.
 
-![Screenshot sesudah TP10](screenshots/tp10-sesudah-v04.png)
+Struktur tersebut membuat setiap bagian memiliki pengaturan layout tersendiri sehingga kode lebih mudah dibaca, dikelola, dan dikembangkan.
 
-## D. Properti Tambahan
+## E. Screenshot Aplikasi
 
-Dua properti tambahan yang diterapkan pada komponen JLabel:
+### 1. Tampilan Ukuran Awal
 
-1. **ToolTipText (`setToolTipText`)**  
-   Menampilkan informasi tambahan berupa deskripsi role, HP, dan ATK ketika pengguna mengarahkan kursor ke kartu karakter. Properti ini membantu pengguna memperoleh informasi lebih lengkap tanpa membuat tampilan utama terlalu ramai.
+![Tampilan ukuran awal](screenshots/tp12-1-ukuran-awal.png)
 
-2. **Horizontal Alignment (`setHorizontalAlignment`)**  
-   Mengatur perataan teks karakter ke sisi kiri agar informasi setiap karakter lebih mudah dibaca dan tampil konsisten.
+### 2. Tampilan Jendela Diperlebar
 
-Selain itu, aplikasi juga menerapkan cursor `HAND_CURSOR` dan penekanan visual untuk karakter dengan level minimal 5 menggunakan warna emas dan font tebal.
+![Tampilan jendela diperlebar](screenshots/tp12-2-ukuran-lebar.png)
 
-## E. Mini Challenge
+### 3. Tampilan Jendela Diperkecil
 
-Karakter dengan level minimal 5 akan ditampilkan menggunakan teks berwarna emas dan font tebal. Batas level ditentukan melalui konstanta `HIGH_LEVEL_THRESHOLD` di `AppTheme`, sehingga nilai batas dapat diubah dari satu tempat.
+![Tampilan jendela diperkecil](screenshots/tp12-3-ukuran-kecil.png)
 
-## F. Analisis Properti & MVC
+## F. Pengamatan Responsivitas
 
-Laporan analisis lengkap minimal 500 kata tersedia melalui Google Docs:
+| Kondisi | Prediksi | Hasil Pengamatan |
+|---|---|---|
+| Ukuran awal | Komponen tampil sesuai pembagian layout. | Header, statistik, daftar karakter, legend, dan status bar terlihat. |
+| Jendela diperlebar | Area CENTER memperoleh ruang lebih besar. | Daftar karakter terlihat lebih leluasa. |
+| Jendela diperkecil | Scrollbar membantu melihat daftar karakter. | Scrollbar muncul dan ruang beberapa komponen menjadi lebih terbatas. |
 
-**Link Google Docs:** 
-  https://docs.google.com/document/d/1yy_5cEwf07As2V81NW2msPiOi7dqrEgTQLt_NBXsT8w/edit?usp=sharing
+## G. Analisis Pemilihan Layout
 
-## G. Struktur File Utama
+GridLayout dipilih untuk panel statistik karena empat informasi role perlu ditampilkan secara sejajar dan memiliki ukuran yang seragam.
+
+BoxLayout dipilih untuk Role Legend karena komponen perlu disusun secara vertikal. FlowLayout tidak dipilih untuk panel statistik karena susunan komponen dapat berubah mengikuti ruang yang tersedia. GridLayout lebih sesuai untuk mempertahankan susunan empat informasi dalam satu baris.
+
+Penggunaan JScrollPane juga membantu pengguna mengakses seluruh daftar karakter ketika ukuran jendela terbatas.
+
+## H. Penerapan Prinsip MVC
+
+Pengaturan tampilan diletakkan di package `view`, sedangkan pengelolaan data tetap berada di package `model`. Pemisahan ini membuat perubahan tampilan tidak harus mengubah bagian model.
+
+Contohnya, daftar karakter dapat diubah dari JLabel menjadi JTable pada bagian view tanpa harus mengubah struktur class Character dan CharacterManager. Dengan demikian, aplikasi lebih mudah dirawat dan dikembangkan.
+
+## I. Laporan Google Docs
+
+Laporan analisis TP12 dapat dibuka melalui tautan berikut:
+
+[**JavaVisual_TP12_253303621254_ChelsiValentineHarefa**](https://docs.google.com/document/d/1CvPSX3oc_1VThhpB-F_o9CvshvVlhdxfwNy2-9j4oZs/edit?usp=sharing)
+
+## J. Struktur File Proyek
 
 ```text
-src/
-├── Main.java
-└── com/
-    └── unpri/
-        └── charactermanager/
-            ├── model/
-            │   ├── Character.java
-            │   ├── CharacterManager.java
-            │   └── CharacterType.java
-            └── view/
-                ├── AppTheme.java
-                └── MainWindow.java
+CharacterManagerrr/
+├── src/
+│   ├── Main.java
+│   └── com/
+│       └── unpri/
+│           └── charactermanager/
+│               ├── model/
+│               │   ├── Character.java
+│               │   ├── CharacterManager.java
+│               │   └── CharacterType.java
+│               └── view/
+│                   ├── AppTheme.java
+│                   └── MainWindow.java
+├── screenshots/
+│   ├── tp12-1-ukuran-awal.png
+│   ├── tp12-2-ukuran-lebar.png
+│   └── tp12-3-ukuran-kecil.png
+└── README.md
 ```
 
-## H. Kesimpulan
+## K. Kesimpulan
 
-Pada TP10, aplikasi Character Manager berhasil dikembangkan menjadi versi 0.4 dengan penerapan tema terpusat, warna berdasarkan role, pengaturan font, border, tooltip, dan properti alignment. Pengembangan ini mempertahankan pemisahan antara Model dan View sehingga struktur aplikasi menjadi lebih terorganisasi dan mudah dikembangkan.
+Melalui TP12, aplikasi Character Manager berhasil dikembangkan menjadi versi 0.5 dengan menerapkan BorderLayout, GridLayout, BoxLayout, nested panels, dan JScrollPane. Penerapan LayoutManager membuat tampilan lebih terstruktur dan membantu aplikasi menyesuaikan perubahan ukuran jendela. Pengembangan ini juga memperkuat pemahaman mengenai prinsip MVC dalam pemisahan pengelolaan data dan antarmuka pengguna.
