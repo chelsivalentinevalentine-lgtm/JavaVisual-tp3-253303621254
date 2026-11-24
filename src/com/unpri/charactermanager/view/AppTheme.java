@@ -16,6 +16,10 @@ public final class AppTheme {
     public static final Color TEXT_LIGHT = Color.WHITE;
     public static final Color GOLD = Color.decode("#fdcb6e");
 
+    // WARNA VALIDASI
+    public static final Color ERROR = Color.decode("#ff7675");
+    public static final Color SUCCESS = Color.decode("#55efc4");
+
     // WARNA STATUS BAR
     public static final Color BG_STATUS = Color.decode("#0d0d1a");
     public static final Color TEXT_MUTED = Color.decode("#9d9dbf");
