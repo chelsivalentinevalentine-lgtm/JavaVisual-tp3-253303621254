@@ -5,26 +5,23 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Cursor;
-
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import com.unpri.charactermanager.model.Character;
+import com.unpri.charactermanager.model.CharacterType;
 
 public class MainWindow extends JFrame {
 
-    private JPanel mainPanel;
     private ArrayList<Character> characterList;
 
     public MainWindow(ArrayList<Character> characterList) {
-
-        super("Character Manager v0.4");
+        super("Character Manager v0.5");
 
         this.characterList = characterList;
 
@@ -37,33 +34,27 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout(0, 12));
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 12));
         mainPanel.setBackground(AppTheme.BG_MAIN);
-
         mainPanel.setBorder(
                 BorderFactory.createEmptyBorder(16, 16, 16, 16)
         );
 
-        JLabel titleLabel = new JLabel(
-                "=== Daftar Karakter (" + characterList.size() + ") ==="
-        );
+        // NORTH: HEADER DAN STATISTIK
+        JPanel topPanel = new JPanel(new BorderLayout(0, 10));
+        topPanel.setBackground(AppTheme.BG_MAIN);
+        topPanel.add(createHeaderPanel(), BorderLayout.NORTH);
+        topPanel.add(createStatisticsPanel(), BorderLayout.SOUTH);
 
-        titleLabel.setFont(AppTheme.FONT_TITLE);
-        titleLabel.setForeground(AppTheme.TEXT_MAIN);
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
-
+        // CENTER: DAFTAR KARAKTER LAMA
         JPanel characterPanel = new JPanel(
                 new GridLayout(0, 1, 0, 8)
         );
-
         characterPanel.setBackground(AppTheme.BG_MAIN);
 
         for (Character c : characterList) {
-
             String info = c.getName()
                     + " | " + c.getType()
                     + " | Lv." + c.getLevel()
@@ -71,43 +62,24 @@ public class MainWindow extends JFrame {
                     + " | ATK:" + c.getAttackPower();
 
             JLabel characterLabel = new JLabel(info);
-
-            // Warna berdasarkan role
             characterLabel.setBackground(
                     AppTheme.colorFor(c.getType())
             );
-
             characterLabel.setOpaque(true);
-
-            // Font dan warna teks
             characterLabel.setFont(AppTheme.FONT_BODY);
             characterLabel.setForeground(AppTheme.TEXT_LIGHT);
-
-            // Border
             characterLabel.setBorder(AppTheme.CARD_BORDER);
-
-            // Properti tambahan 1: tooltip berisi informasi lengkap
             characterLabel.setToolTipText(
                     AppTheme.describe(c.getType())
                     + " | HP: " + c.getHitPoints()
                     + " | ATK: " + c.getAttackPower()
             );
-
-            // Properti tambahan 2: perataan teks
             characterLabel.setHorizontalAlignment(
                     SwingConstants.LEFT
             );
 
-            // Cursor ketika diarahkan ke kartu
-            characterLabel.setCursor(
-                    new Cursor(Cursor.HAND_CURSOR)
-            );
-
-            // Mini challenge: level tinggi diberi warna emas dan bold
             if (c.getLevel() >= AppTheme.HIGH_LEVEL_THRESHOLD) {
-
                 characterLabel.setForeground(AppTheme.GOLD);
-
                 characterLabel.setFont(
                         AppTheme.FONT_BODY.deriveFont(Font.BOLD)
                 );
@@ -119,5 +91,57 @@ public class MainWindow extends JFrame {
         mainPanel.add(characterPanel, BorderLayout.CENTER);
 
         add(mainPanel);
+    }
+
+    // HEADER: JUDUL DAN JUMLAH KARAKTER
+    private JPanel createHeaderPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(AppTheme.BG_MAIN);
+
+        JLabel titleLabel = new JLabel("=== Daftar Karakter ===");
+        titleLabel.setFont(AppTheme.FONT_TITLE);
+        titleLabel.setForeground(AppTheme.TEXT_MAIN);
+
+        JLabel countLabel = new JLabel(
+                "Total: " + characterList.size()
+        );
+        countLabel.setFont(AppTheme.FONT_MONO);
+        countLabel.setForeground(AppTheme.GOLD);
+
+        panel.add(titleLabel, BorderLayout.WEST);
+        panel.add(countLabel, BorderLayout.EAST);
+
+        return panel;
+    }
+
+    // STATISTIK BERDASARKAN ROLE
+    private JPanel createStatisticsPanel() {
+        JPanel panel = new JPanel(new GridLayout(1, 4, 8, 0));
+        panel.setBackground(AppTheme.BG_MAIN);
+
+        for (CharacterType type : CharacterType.values()) {
+            int total = 0;
+
+            for (Character c : characterList) {
+                if (c.getType() == type) {
+                    total++;
+                }
+            }
+
+            JLabel label = new JLabel(
+                    type + ": " + total,
+                    SwingConstants.CENTER
+            );
+
+            label.setFont(AppTheme.FONT_MONO);
+            label.setForeground(AppTheme.TEXT_LIGHT);
+            label.setBackground(AppTheme.colorFor(type));
+            label.setOpaque(true);
+            label.setBorder(AppTheme.CARD_BORDER);
+
+            panel.add(label);
+        }
+
+        return panel;
     }
 }
