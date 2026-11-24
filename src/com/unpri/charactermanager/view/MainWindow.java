@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,7 +39,7 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-        JPanel mainPanel = new JPanel(new BorderLayout(0, 12));
+        JPanel mainPanel = new JPanel(new BorderLayout(12, 12));
         mainPanel.setBackground(AppTheme.BG_MAIN);
         mainPanel.setBorder(
                 BorderFactory.createEmptyBorder(16, 16, 16, 16)
@@ -53,6 +55,9 @@ public class MainWindow extends JFrame {
 
         // CENTER: DAFTAR KARAKTER DENGAN SCROLLBAR
         mainPanel.add(createListArea(), BorderLayout.CENTER);
+
+        // EAST: LEGENDA ROLE
+        mainPanel.add(createLegendPanel(), BorderLayout.EAST);
 
         add(mainPanel);
     }
@@ -155,7 +160,6 @@ public class MainWindow extends JFrame {
             cards.add(characterLabel);
         }
 
-        // Wrapper agar kartu tidak meregang memenuhi tinggi scroll
         JPanel holder = new JPanel(new BorderLayout());
         holder.setBackground(AppTheme.BG_MAIN);
         holder.add(cards, BorderLayout.NORTH);
@@ -168,6 +172,41 @@ public class MainWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(AppTheme.BG_MAIN);
         panel.add(scroll, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    // EAST: LEGENDA ROLE DI SEBELAH KANAN
+    private JPanel createLegendPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(AppTheme.BG_MAIN);
+        panel.setBorder(
+                BorderFactory.createEmptyBorder(0, 8, 0, 0)
+        );
+
+        JLabel title = new JLabel("ROLE LEGEND");
+        title.setFont(AppTheme.FONT_BODY);
+        title.setForeground(AppTheme.GOLD);
+
+        panel.add(title);
+        panel.add(Box.createVerticalStrut(12));
+
+        for (CharacterType type : CharacterType.values()) {
+            JLabel chip = new JLabel("  " + type + "  ");
+
+            chip.setFont(AppTheme.FONT_BODY);
+            chip.setForeground(AppTheme.TEXT_LIGHT);
+            chip.setBackground(AppTheme.colorFor(type));
+            chip.setOpaque(true);
+            chip.setBorder(AppTheme.CARD_BORDER);
+            chip.setToolTipText(AppTheme.describe(type));
+
+            panel.add(chip);
+            panel.add(Box.createVerticalStrut(8));
+        }
+
+        panel.add(Box.createVerticalGlue());
 
         return panel;
     }
