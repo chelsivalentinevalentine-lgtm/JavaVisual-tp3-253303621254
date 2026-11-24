@@ -2,7 +2,6 @@
 package com.unpri.charactermanager.view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -33,7 +32,7 @@ public class MainWindow extends JFrame {
         initComponents();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(420, 300));
+        setMinimumSize(new Dimension(560, 380));
         pack();
         setLocationRelativeTo(null);
     }
@@ -58,6 +57,9 @@ public class MainWindow extends JFrame {
 
         // EAST: LEGENDA ROLE
         mainPanel.add(createLegendPanel(), BorderLayout.EAST);
+
+        // SOUTH: STATUS BAR
+        mainPanel.add(createStatusPanel(), BorderLayout.SOUTH);
 
         add(mainPanel);
     }
@@ -207,6 +209,30 @@ public class MainWindow extends JFrame {
         }
 
         panel.add(Box.createVerticalGlue());
+
+        return panel;
+    }
+
+    // SOUTH: STATUS BAR
+    private JPanel createStatusPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(AppTheme.BG_STATUS);
+        panel.setBorder(
+                BorderFactory.createEmptyBorder(8, 10, 8, 10)
+        );
+
+        JLabel statusLabel = new JLabel(
+                "Total: " + characterList.size() + " karakter | Siap"
+        );
+        statusLabel.setFont(AppTheme.FONT_MONO);
+        statusLabel.setForeground(AppTheme.TEXT_LIGHT);
+
+        JLabel versionLabel = new JLabel("v0.5");
+        versionLabel.setFont(AppTheme.FONT_MONO);
+        versionLabel.setForeground(AppTheme.TEXT_MUTED);
+
+        panel.add(statusLabel, BorderLayout.WEST);
+        panel.add(versionLabel, BorderLayout.EAST);
 
         return panel;
     }
