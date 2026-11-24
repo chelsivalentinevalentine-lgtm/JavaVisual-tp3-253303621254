@@ -122,7 +122,8 @@ Pada sprint ini, event handling masih menggunakan `ActionListener` secara langsu
 
 Laporan analisis TP14 berisi pembahasan mengenai validasi input, perbedaan validasi format dan semantik, validasi dua lapisan, prinsip pesan kesalahan, serta penggunaan casting pada komponen Swing.
 
-**Tautan Google Docs:** Akan ditambahkan setelah laporan TP14 selesai dibuat.
+**Link Google Docs:**
+https://docs.google.com/document/d/183rUvlaXkDrRReeHIF4H8MN16Fr6e8vnqp8woBJtCI8/edit?usp=sharing
 
 ## I. Struktur File Proyek
 
