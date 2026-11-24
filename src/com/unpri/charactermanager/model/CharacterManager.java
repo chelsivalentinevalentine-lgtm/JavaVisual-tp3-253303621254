@@ -11,29 +11,58 @@ public class CharacterManager {
         this.characterList = new ArrayList<>();
     }
 
-    // Menambahkan karakter dan menolak nama duplikat
+    // Mengecek apakah nama sudah digunakan
+    public boolean isNameTaken(String name) {
+        if (name == null) {
+            return false;
+        }
+
+        for (Character c : characterList) {
+            if (c.getName().equalsIgnoreCase(name.trim())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Menambahkan karakter
     public boolean addCharacter(Character character) {
         if (character == null) {
             System.out.println("Gagal: karakter tidak boleh null!");
             return false;
         }
 
-        if (findByName(character.getName()) != null) {
+        if (isNameTaken(character.getName())) {
             System.out.println("Gagal: karakter dengan nama '"
                     + character.getName() + "' sudah ada!");
             return false;
         }
 
+        // Aturan Model: maksimal 20 karakter
+        if (characterList.size() >= 20) {
+            System.out.println(
+                    "Gagal: jumlah karakter maksimal 20!"
+            );
+            return false;
+        }
+
         characterList.add(character);
+
         System.out.println("Karakter '" + character.getName()
                 + "' berhasil ditambahkan.");
+
         return true;
     }
 
     // Mencari karakter berdasarkan nama
     public Character findByName(String name) {
+        if (name == null) {
+            return null;
+        }
+
         for (Character c : characterList) {
-            if (c.getName().equals(name)) {
+            if (c.getName().equalsIgnoreCase(name.trim())) {
                 return c;
             }
         }
@@ -52,8 +81,10 @@ public class CharacterManager {
         }
 
         characterList.remove(target);
+
         System.out.println("Karakter '" + name
                 + "' berhasil dihapus.");
+
         return true;
     }
 
@@ -62,12 +93,12 @@ public class CharacterManager {
         return characterList.size();
     }
 
-    // Mengembalikan salinan list agar data asli terlindungi
+    // Mengembalikan salinan daftar karakter
     public ArrayList<Character> getAllCharacters() {
         return new ArrayList<>(characterList);
     }
 
-    // Menghitung rata-rata level karakter
+    // Menghitung rata-rata level
     public double getAverageLevel() {
         if (characterList.isEmpty()) {
             return 0;
@@ -82,7 +113,7 @@ public class CharacterManager {
         return (double) totalLevel / characterList.size();
     }
 
-    // Mencari semua karakter berdasarkan tipe
+    // Mencari karakter berdasarkan tipe
     public ArrayList<Character> findByType(CharacterType type) {
         ArrayList<Character> result = new ArrayList<>();
 
@@ -95,10 +126,7 @@ public class CharacterManager {
         return result;
     }
 
-    /**
-     * Mencari karakter dengan level tertinggi.
-     * Mengembalikan null jika daftar karakter kosong.
-     */
+    // Mencari karakter dengan level tertinggi
     public Character findStrongest() {
         if (characterList.isEmpty()) {
             return null;

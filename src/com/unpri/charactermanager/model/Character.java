@@ -1,4 +1,3 @@
-
 package com.unpri.charactermanager.model;
 
 public class Character {
@@ -12,8 +11,12 @@ public class Character {
     private int mana;
 
     public Character(String name, CharacterType type, int level) {
+        validateName(name);
+        validateType(type);
+        validateLevel(level, type);
+
         this.id = 0;
-        this.name = name;
+        this.name = name.trim();
         this.type = type;
         this.mana = 0;
         setLevel(level);
@@ -21,13 +24,47 @@ public class Character {
 
     public Character(int id, String name, CharacterType type,
                      int level, int hitPoints, int attackPower) {
+        validateName(name);
+        validateType(type);
+        validateLevel(level, type);
+
         this.id = id;
-        this.name = name;
+        this.name = name.trim();
         this.type = type;
         this.level = level;
         this.hitPoints = hitPoints;
         this.attackPower = attackPower;
         this.mana = 0;
+    }
+
+    private void validateName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Nama tidak boleh kosong"
+            );
+        }
+    }
+
+    private void validateType(CharacterType type) {
+        if (type == null) {
+            throw new IllegalArgumentException(
+                    "Role wajib dipilih"
+            );
+        }
+    }
+
+    private void validateLevel(int level, CharacterType type) {
+        if (level < 1 || level > 99) {
+            throw new IllegalArgumentException(
+                    "Level harus 1-99"
+            );
+        }
+
+        if (type == CharacterType.MAGE && level > 60) {
+            throw new IllegalArgumentException(
+                    "MAGE tidak boleh memiliki level di atas 60"
+            );
+        }
     }
 
     private int calculateBaseHP(int level) {
@@ -71,9 +108,7 @@ public class Character {
     }
 
     public void setLevel(int level) {
-        if (level < 1) {
-            throw new IllegalArgumentException("Level minimal 1!");
-        }
+        validateLevel(level, type);
 
         this.level = level;
         this.hitPoints = calculateBaseHP(level);
@@ -82,7 +117,9 @@ public class Character {
 
     public void setMana(int mana) {
         if (mana < 0) {
-            throw new IllegalArgumentException("Mana tidak boleh negatif!");
+            throw new IllegalArgumentException(
+                    "Mana tidak boleh negatif!"
+            );
         }
 
         this.mana = mana;
@@ -105,7 +142,6 @@ public class Character {
                 '}';
     }
 
-    // Membandingkan Character berdasarkan nama
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -114,6 +150,6 @@ public class Character {
 
         Character other = (Character) obj;
 
-        return this.name.equals(other.name);
+        return this.name.equalsIgnoreCase(other.name);
     }
 }
