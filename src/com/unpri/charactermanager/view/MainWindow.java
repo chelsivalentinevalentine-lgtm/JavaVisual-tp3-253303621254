@@ -2,6 +2,8 @@
 package com.unpri.charactermanager.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -11,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import com.unpri.charactermanager.model.Character;
@@ -48,47 +51,8 @@ public class MainWindow extends JFrame {
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // CENTER: DAFTAR KARAKTER LAMA
-        JPanel characterPanel = new JPanel(
-                new GridLayout(0, 1, 0, 8)
-        );
-        characterPanel.setBackground(AppTheme.BG_MAIN);
-
-        for (Character c : characterList) {
-            String info = c.getName()
-                    + " | " + c.getType()
-                    + " | Lv." + c.getLevel()
-                    + " | HP:" + c.getHitPoints()
-                    + " | ATK:" + c.getAttackPower();
-
-            JLabel characterLabel = new JLabel(info);
-            characterLabel.setBackground(
-                    AppTheme.colorFor(c.getType())
-            );
-            characterLabel.setOpaque(true);
-            characterLabel.setFont(AppTheme.FONT_BODY);
-            characterLabel.setForeground(AppTheme.TEXT_LIGHT);
-            characterLabel.setBorder(AppTheme.CARD_BORDER);
-            characterLabel.setToolTipText(
-                    AppTheme.describe(c.getType())
-                    + " | HP: " + c.getHitPoints()
-                    + " | ATK: " + c.getAttackPower()
-            );
-            characterLabel.setHorizontalAlignment(
-                    SwingConstants.LEFT
-            );
-
-            if (c.getLevel() >= AppTheme.HIGH_LEVEL_THRESHOLD) {
-                characterLabel.setForeground(AppTheme.GOLD);
-                characterLabel.setFont(
-                        AppTheme.FONT_BODY.deriveFont(Font.BOLD)
-                );
-            }
-
-            characterPanel.add(characterLabel);
-        }
-
-        mainPanel.add(characterPanel, BorderLayout.CENTER);
+        // CENTER: DAFTAR KARAKTER DENGAN SCROLLBAR
+        mainPanel.add(createListArea(), BorderLayout.CENTER);
 
         add(mainPanel);
     }
@@ -141,6 +105,69 @@ public class MainWindow extends JFrame {
 
             panel.add(label);
         }
+
+        return panel;
+    }
+
+    // CENTER: KARTU KARAKTER DAN SCROLLBAR
+    private JPanel createListArea() {
+        JPanel cards = new JPanel(new GridLayout(0, 1, 0, 8));
+        cards.setBackground(AppTheme.BG_MAIN);
+
+        for (Character c : characterList) {
+            String info = c.getName()
+                    + " | " + c.getType()
+                    + " | Lv." + c.getLevel()
+                    + " | HP:" + c.getHitPoints()
+                    + " | ATK:" + c.getAttackPower();
+
+            JLabel characterLabel = new JLabel(info);
+
+            characterLabel.setBackground(
+                    AppTheme.colorFor(c.getType())
+            );
+            characterLabel.setOpaque(true);
+            characterLabel.setFont(AppTheme.FONT_BODY);
+            characterLabel.setForeground(AppTheme.TEXT_LIGHT);
+            characterLabel.setBorder(AppTheme.CARD_BORDER);
+
+            characterLabel.setToolTipText(
+                    AppTheme.describe(c.getType())
+                    + " | HP: " + c.getHitPoints()
+                    + " | ATK: " + c.getAttackPower()
+            );
+
+            characterLabel.setHorizontalAlignment(
+                    SwingConstants.LEFT
+            );
+
+            characterLabel.setCursor(
+                    new Cursor(Cursor.HAND_CURSOR)
+            );
+
+            if (c.getLevel() >= AppTheme.HIGH_LEVEL_THRESHOLD) {
+                characterLabel.setForeground(AppTheme.GOLD);
+                characterLabel.setFont(
+                        AppTheme.FONT_BODY.deriveFont(Font.BOLD)
+                );
+            }
+
+            cards.add(characterLabel);
+        }
+
+        // Wrapper agar kartu tidak meregang memenuhi tinggi scroll
+        JPanel holder = new JPanel(new BorderLayout());
+        holder.setBackground(AppTheme.BG_MAIN);
+        holder.add(cards, BorderLayout.NORTH);
+
+        JScrollPane scroll = new JScrollPane(holder);
+        scroll.setBorder(null);
+        scroll.setPreferredSize(new Dimension(460, 280));
+        scroll.getViewport().setBackground(AppTheme.BG_MAIN);
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(AppTheme.BG_MAIN);
+        panel.add(scroll, BorderLayout.CENTER);
 
         return panel;
     }
