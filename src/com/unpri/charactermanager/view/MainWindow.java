@@ -6,7 +6,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,28 +17,38 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import com.unpri.charactermanager.model.Character;
+import com.unpri.charactermanager.model.CharacterManager;
 import com.unpri.charactermanager.model.CharacterType;
 
 public class MainWindow extends JFrame {
 
-    private ArrayList<Character> characterList;
+    private final CharacterManager manager;
 
-    public MainWindow(ArrayList<Character> characterList) {
-        super("Character Manager v0.5");
+    private JPanel cardsPanel;
+    private JPanel statisticsPanel;
 
-        this.characterList = characterList;
+    private JLabel countLabel;
+    private JLabel statusLabel;
+
+    public MainWindow(CharacterManager manager) {
+        super("Character Manager v0.6");
+
+        this.manager = manager;
 
         initComponents();
+        refreshList();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(560, 380));
-        pack();
+        setMinimumSize(new Dimension(950, 550));
+        setSize(1100, 600);
         setLocationRelativeTo(null);
     }
 
     private void initComponents() {
+
         JPanel mainPanel = new JPanel(new BorderLayout(12, 12));
         mainPanel.setBackground(AppTheme.BG_MAIN);
+
         mainPanel.setBorder(
                 BorderFactory.createEmptyBorder(16, 16, 16, 16)
         );
@@ -47,12 +56,23 @@ public class MainWindow extends JFrame {
         // NORTH: HEADER DAN STATISTIK
         JPanel topPanel = new JPanel(new BorderLayout(0, 10));
         topPanel.setBackground(AppTheme.BG_MAIN);
+
         topPanel.add(createHeaderPanel(), BorderLayout.NORTH);
-        topPanel.add(createStatisticsPanel(), BorderLayout.SOUTH);
+
+        statisticsPanel = createStatisticsPanel();
+        topPanel.add(statisticsPanel, BorderLayout.SOUTH);
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // CENTER: DAFTAR KARAKTER DENGAN SCROLLBAR
+        // WEST: FORM INPUT
+        CharacterFormPanel formPanel =
+                new CharacterFormPanel(manager, this::refreshList);
+
+        formPanel.setPreferredSize(new Dimension(220, 350));
+
+        mainPanel.add(formPanel, BorderLayout.WEST);
+
+        // CENTER: DAFTAR KARAKTER
         mainPanel.add(createListArea(), BorderLayout.CENTER);
 
         // EAST: LEGENDA ROLE
@@ -64,18 +84,19 @@ public class MainWindow extends JFrame {
         add(mainPanel);
     }
 
-    // HEADER: JUDUL DAN JUMLAH KARAKTER
+    // HEADER
     private JPanel createHeaderPanel() {
+
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(AppTheme.BG_MAIN);
 
-        JLabel titleLabel = new JLabel("=== Daftar Karakter ===");
+        JLabel titleLabel =
+                new JLabel("=== Daftar Karakter ===");
+
         titleLabel.setFont(AppTheme.FONT_TITLE);
         titleLabel.setForeground(AppTheme.TEXT_MAIN);
 
-        JLabel countLabel = new JLabel(
-                "Total: " + characterList.size()
-        );
+        countLabel = new JLabel("Total: 0");
         countLabel.setFont(AppTheme.FONT_MONO);
         countLabel.setForeground(AppTheme.GOLD);
 
@@ -85,15 +106,26 @@ public class MainWindow extends JFrame {
         return panel;
     }
 
-    // STATISTIK BERDASARKAN ROLE
+    // STATISTIK ROLE
     private JPanel createStatisticsPanel() {
+
         JPanel panel = new JPanel(new GridLayout(1, 4, 8, 0));
         panel.setBackground(AppTheme.BG_MAIN);
 
+        updateStatistics(panel);
+
+        return panel;
+    }
+
+    private void updateStatistics(JPanel panel) {
+
+        panel.removeAll();
+
         for (CharacterType type : CharacterType.values()) {
+
             int total = 0;
 
-            for (Character c : characterList) {
+            for (Character c : manager.getAllCharacters()) {
                 if (c.getType() == type) {
                     total++;
                 }
@@ -113,15 +145,38 @@ public class MainWindow extends JFrame {
             panel.add(label);
         }
 
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    // AREA DAFTAR KARAKTER
+    private JPanel createListArea() {
+
+        cardsPanel = new JPanel(new GridLayout(0, 1, 0, 8));
+        cardsPanel.setBackground(AppTheme.BG_MAIN);
+
+        JPanel holder = new JPanel(new BorderLayout());
+        holder.setBackground(AppTheme.BG_MAIN);
+        holder.add(cardsPanel, BorderLayout.NORTH);
+
+        JScrollPane scroll = new JScrollPane(holder);
+        scroll.setBorder(null);
+        scroll.getViewport().setBackground(AppTheme.BG_MAIN);
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(AppTheme.BG_MAIN);
+        panel.add(scroll, BorderLayout.CENTER);
+
         return panel;
     }
 
-    // CENTER: KARTU KARAKTER DAN SCROLLBAR
-    private JPanel createListArea() {
-        JPanel cards = new JPanel(new GridLayout(0, 1, 0, 8));
-        cards.setBackground(AppTheme.BG_MAIN);
+    // MEMPERBARUI DAFTAR KARAKTER
+    public void refreshList() {
 
-        for (Character c : characterList) {
+        cardsPanel.removeAll();
+
+        for (Character c : manager.getAllCharacters()) {
+
             String info = c.getName()
                     + " | " + c.getType()
                     + " | Lv." + c.getLevel()
@@ -133,6 +188,7 @@ public class MainWindow extends JFrame {
             characterLabel.setBackground(
                     AppTheme.colorFor(c.getType())
             );
+
             characterLabel.setOpaque(true);
             characterLabel.setFont(AppTheme.FONT_BODY);
             characterLabel.setForeground(AppTheme.TEXT_LIGHT);
@@ -154,35 +210,37 @@ public class MainWindow extends JFrame {
 
             if (c.getLevel() >= AppTheme.HIGH_LEVEL_THRESHOLD) {
                 characterLabel.setForeground(AppTheme.GOLD);
+
                 characterLabel.setFont(
                         AppTheme.FONT_BODY.deriveFont(Font.BOLD)
                 );
             }
 
-            cards.add(characterLabel);
+            cardsPanel.add(characterLabel);
         }
 
-        JPanel holder = new JPanel(new BorderLayout());
-        holder.setBackground(AppTheme.BG_MAIN);
-        holder.add(cards, BorderLayout.NORTH);
+        countLabel.setText(
+                "Total: " + manager.getTotalCharacters()
+        );
 
-        JScrollPane scroll = new JScrollPane(holder);
-        scroll.setBorder(null);
-        scroll.setPreferredSize(new Dimension(460, 280));
-        scroll.getViewport().setBackground(AppTheme.BG_MAIN);
+        updateStatistics(statisticsPanel);
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(AppTheme.BG_MAIN);
-        panel.add(scroll, BorderLayout.CENTER);
+        statusLabel.setText(
+                "Total: " + manager.getTotalCharacters()
+                + " karakter | Data diperbarui"
+        );
 
-        return panel;
+        cardsPanel.revalidate();
+        cardsPanel.repaint();
     }
 
-    // EAST: LEGENDA ROLE DI SEBELAH KANAN
+    // LEGENDA ROLE
     private JPanel createLegendPanel() {
+
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(AppTheme.BG_MAIN);
+
         panel.setBorder(
                 BorderFactory.createEmptyBorder(0, 8, 0, 0)
         );
@@ -195,6 +253,7 @@ public class MainWindow extends JFrame {
         panel.add(Box.createVerticalStrut(12));
 
         for (CharacterType type : CharacterType.values()) {
+
             JLabel chip = new JLabel("  " + type + "  ");
 
             chip.setFont(AppTheme.FONT_BODY);
@@ -213,21 +272,25 @@ public class MainWindow extends JFrame {
         return panel;
     }
 
-    // SOUTH: STATUS BAR
+    // STATUS BAR
     private JPanel createStatusPanel() {
+
         JPanel panel = new JPanel(new BorderLayout());
+
         panel.setBackground(AppTheme.BG_STATUS);
+
         panel.setBorder(
                 BorderFactory.createEmptyBorder(8, 10, 8, 10)
         );
 
-        JLabel statusLabel = new JLabel(
-                "Total: " + characterList.size() + " karakter | Siap"
+        statusLabel = new JLabel(
+                "Total: 0 karakter | Siap"
         );
+
         statusLabel.setFont(AppTheme.FONT_MONO);
         statusLabel.setForeground(AppTheme.TEXT_LIGHT);
 
-        JLabel versionLabel = new JLabel("v0.5");
+        JLabel versionLabel = new JLabel("v0.6");
         versionLabel.setFont(AppTheme.FONT_MONO);
         versionLabel.setForeground(AppTheme.TEXT_MUTED);
 

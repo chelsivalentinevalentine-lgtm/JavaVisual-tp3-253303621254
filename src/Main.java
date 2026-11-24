@@ -12,7 +12,7 @@ public class Main {
         // Membuat CharacterManager
         CharacterManager manager = new CharacterManager();
 
-        // Menambahkan 8 karakter
+        // Menambahkan 8 karakter awal
         manager.addCharacter(
                 new Character("Arjuna", CharacterType.WARRIOR, 5)
         );
@@ -48,9 +48,7 @@ public class Main {
         // Menjalankan GUI melalui Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
 
-            MainWindow window = new MainWindow(
-                    manager.getAllCharacters()
-            );
+            MainWindow window = new MainWindow(manager);
 
             window.setVisible(true);
         });
